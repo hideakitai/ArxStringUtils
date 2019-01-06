@@ -43,21 +43,23 @@ namespace Convert
 
 
     template <typename T, size_t length = sizeof(T) * 2>
-    auto to_hex(const T& value)
+    auto to_hex(const T& value, bool b_leading_zeros = true)
     -> typename std::enable_if<std::is_integral<T>::value, String>::type
     {
-        String format = "%0" + String(length) + "X";
+        String format;
+        if (b_leading_zeros) format = "%0" + String(length) + "X";
+        else                 format = "%X";
         char hex[length + 1];
         sprintf(hex, format.c_str(), value);
         return String(hex);
     }
     template <typename T, size_t length = sizeof(T) * 2>
-    auto to_hex(const T& value)
+    auto to_hex(const T& value, bool b_leading_zeros = true)
     -> typename std::enable_if<std::is_floating_point<T>::value, String>::type
     {
         IntFloatUnion<T> myUnion;
         myUnion.f = value;
-        return to_hex(myUnion.x);
+        return to_hex(myUnion.x, b_leading_zeros);
     }
 
     int from_hex_to_int(const String& intHexString) { return (int)strtol(intHexString.c_str(), NULL, 16); }
