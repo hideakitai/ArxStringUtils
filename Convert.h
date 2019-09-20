@@ -77,6 +77,16 @@ namespace Convert
         return myUnion.f;
     }
 
+    uint8_t from_dec_to_bcd(uint8_t n)
+    {
+        return n + 6 * (n / 10);
+    }
+
+    uint8_t from_bcd_to_dec(uint8_t n)
+    {
+        return n - 6 * (n >> 4);
+    }
+
 #ifndef __AVR__
 
     std::vector<String> split_string(const String& s, const String& delim)
