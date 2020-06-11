@@ -1,27 +1,34 @@
-# Convert
-String from/to value conversion in Arduino (port a part of ofUtils (openFrameworks))
+# ArxStringUtils
 
-## Note
+Arduino `String` utilities
 
-AVR Boards (like Uno, Mega etc.) are not supported
 
 ## APIs
 
 ```C++
-    String to_hex(const T& value)
-    int from_hex_to_int(const String&)
-    char from_hex_to_char(const String&)
-    float from_hex_to_float(const String&)
-    double from_hex_to_double(const String&)
+// for integral
+template <typename T> inline String to_string(const T& value)
+template <typename T> inline String to_string(const T& value, size_t width)
+// for floating points
+template <typename T> String to_string(const T& value, size_t precision)
+template <typename T> String to_string(const T& value, size_t precision, size_t width)
 
-    std::vector<String> split_string(const String& str, const String& delim)
+template <typename T> String to_hex(const T& value)
+int from_hex_to_int(const String&)
+char from_hex_to_char(const String&)
+float from_hex_to_float(const String&)
+double from_hex_to_double(const String&)
 
-//    String to_bin(const T& value)
-//    int from_bin_to_int(const String& value)
-//    char from_bin_to_char(const String& value)
-//    float from_bin_to_float(const String& value)
-//    double from_bin_to_double(const String& value)
+template <typename T> inline size_t string_length(const T& value)
+
+// only for STL enabled platforms
+std::vector<String> split_string(const String& str, const String& delim)
 ```
+
+## Embedded Libraries
+
+- [ArxTypeTraits v0.1.10](https://github.com/hideakitai/ArxTypeTraits)
+
 
 ## License
 
