@@ -1,6 +1,6 @@
 #pragma once
-#ifndef ARX_STRINGUTIL_H
-#define ARX_STRINGUTIL_H
+#ifndef ARX_STRINGUTILS_H
+#define ARX_STRINGUTILS_H
 
 #include <Arduino.h>
 #include "util/ArxTypeTraits/ArxTypeTraits.h"

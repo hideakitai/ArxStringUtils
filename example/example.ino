@@ -1,4 +1,4 @@
-#include <ArxStringUtil.h>
+#include <ArxStringUtils.h>
 #include <cassert>
 
 void setup()
