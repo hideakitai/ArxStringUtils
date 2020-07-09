@@ -2,12 +2,43 @@
 #ifndef ARX_STRINGUTILS_H
 #define ARX_STRINGUTILS_H
 
+#if defined(ARDUINO_ARCH_AVR)\
+ || defined(ARDUINO_ARCH_MEGAAVR)\
+ || defined(ARDUINO_ARCH_SAM)\
+ || defined(ARDUINO_ARCH_SAMD)\
+ || defined(ARDUINO_spresense_ast)
+    #define ARX_ARXSTRINGUTILS_STL_DISABLED
+#endif
+
+#ifdef ARDUINO
 #include <Arduino.h>
+    #define ARXSTRUTIL_STRING_CAST(b) String(b)
+    #define ARXSTRUTIL_STRING_SIZE(s) s.length()
+    #define ARXSTRUTIL_STRING_POP_BACK(s) s.remove(s.length() - 1)
+    #define ARXSTRUTIL_STRING_CLEAR(s) s = ""
+    #define ARXSTRUTIL_STRING_SUBSTR(s, i, j) s.substring(i, i + j)
+    #define ARXSTRUTIL_STRING_ERASE(s, i, j) s.remove(i, j)
+    #define ARXSTRUTIL_STRING_TO_INT(s) s.toInt()
+#elif defined (OF_VERSION_MAJOR)
+    #include "ofMain.h"
+    #define ARXSTRUTIL_STRING_CAST(b) ofToString(b)
+    #define ARXSTRUTIL_STRING_SIZE(s) s.size()
+    #define ARXSTRUTIL_STRING_POP_BACK(s) s.pop_back()
+    #define ARXSTRUTIL_STRING_CLEAR(s) s.clear()
+    #define ARXSTRUTIL_STRING_SUBSTR(s, i, j) s.substr(i, j)
+    #define ARXSTRUTIL_STRING_ERASE(s, i, j) s.erase(i, j)
+    #define ARXSTRUTIL_STRING_TO_INT(s) std::stoi(s)
+#endif
 #include "util/ArxTypeTraits/ArxTypeTraits.h"
-#include <type_traits>
 
 namespace arx {
 namespace str {
+
+#ifdef ARDUINO
+    using StringType = String;
+#else
+    using StringType = std::string;
+#endif
 
     namespace detail
     {
@@ -34,7 +65,7 @@ namespace str {
         using IntFloatUnion = typename IntFloatUnion_impl<T>::type;
 
         template <typename T>
-        inline auto to_int(const String &intString)
+        inline auto to_int(const StringType &intString)
         -> typename std::enable_if<std::is_integral<T>::value, T>::type
         {
             return (T)intString.toInt();
@@ -43,43 +74,43 @@ namespace str {
 
     template <typename T, size_t length = sizeof(T) * 2>
     inline auto to_hex(const T& value, bool b_leading_zeros = true)
-    -> typename std::enable_if<std::is_integral<T>::value, String>::type
+    -> typename std::enable_if<std::is_integral<T>::value, StringType>::type
     {
-        String format;
-        if (b_leading_zeros) format = "%0" + String(length) + "X";
+        StringType format;
+        if (b_leading_zeros) format = "%0" + ARXSTRUTIL_STRING_CAST(length) + "X";
         else                 format = "%X";
         char hex[length + 1];
         sprintf(hex, format.c_str(), value);
-        return String(hex);
+        return ARXSTRUTIL_STRING_CAST(hex);
     }
 
     template <typename T, size_t length = sizeof(T) * 2>
     inline auto to_hex(const T& value, bool b_leading_zeros = true)
-    -> typename std::enable_if<std::is_floating_point<T>::value, String>::type
+    -> typename std::enable_if<std::is_floating_point<T>::value, StringType>::type
     {
         detail::IntFloatUnion<T> myUnion;
         myUnion.f = value;
         return to_hex(myUnion.x, b_leading_zeros);
     }
 
-    inline int from_hex_to_int(const String& intHexString)
+    inline int from_hex_to_int(const StringType& intHexString)
     {
         return (int)strtol(intHexString.c_str(), NULL, 16);
     }
 
-    inline char from_hex_to_char(const String& charHexString)
+    inline char from_hex_to_char(const StringType& charHexString)
     {
         return (char)strtol(charHexString.c_str(), NULL, 16);
     }
 
-    inline float from_hex_to_float(const String& floatHexString)
+    inline float from_hex_to_float(const StringType& floatHexString)
     {
         detail::IntFloatUnion<float> myUnion;
         myUnion.x = from_hex_to_int(floatHexString);
         return myUnion.f;
     }
 
-    inline double from_hex_to_double(const String& doubleHexString)
+    inline double from_hex_to_double(const StringType& doubleHexString)
     {
         detail::IntFloatUnion<double> myUnion;
         myUnion.x = from_hex_to_int(doubleHexString);
@@ -109,52 +140,53 @@ namespace str {
 
     template <typename T>
     inline auto to_string(const T& value, size_t width)
-    -> typename std::enable_if<std::is_integral<T>::value, String>::type
+    -> typename std::enable_if<std::is_integral<T>::value, StringType>::type
     {
-        String format;
+        StringType format;
         format = "%0" + String(width) + "d";
         const size_t str_len = string_length(value);
         const size_t len = (width > str_len) ? width : str_len;
         char dec[len + 1];
         sprintf(dec, format.c_str(), value);
-        return String(dec);
+        return ARXSTRUTIL_STRING_CAST(dec);
     }
 
     template <typename T>
     inline auto to_string(const T& value)
-    -> typename std::enable_if<std::is_integral<T>::value, String>::type
+    -> typename std::enable_if<std::is_integral<T>::value, StringType>::type
     {
         return to_string(value, 0);
     }
 
     template <typename T>
     inline auto to_string(const T& value, size_t precision, size_t width)
-    -> typename std::enable_if<std::is_floating_point<T>::value, String>::type
+    -> typename std::enable_if<std::is_floating_point<T>::value, StringType>::type
     {
-        String format;
+        StringType format;
         format = "%0" + String(width) + "." + String(precision) + "f";
         const size_t str_len = String(value).length();
         const size_t len = (width > str_len) ? width : str_len;
         char dec[len + 1];
         sprintf(dec, format.c_str(), value);
-        return String(dec);
+        return ARXSTRUTIL_STRING_CAST(dec);
     }
 
     template <typename T>
     inline auto to_string(const T& value, size_t precision)
-    -> typename std::enable_if<std::is_floating_point<T>::value, String>::type
+    -> typename std::enable_if<std::is_floating_point<T>::value, StringType>::type
     {
         return to_string(value, precision, 0);
     }
 
 
-#ifndef __AVR__
+#ifdef ARDUINO
+#ifndef ARX_ARXSTRINGUTILS_STL_DISABLED
 
     #include <vector>
 
-    inline std::vector<String> split_string(const String& s, const String& delim)
+    inline std::vector<StringType> split_string(const StringType& s, const StringType& delim)
     {
-        std::vector<String> result;
+        std::vector<StringType> result;
         std::vector<size_t> pos;
         // std::vector<size_t> length;
         pos.emplace_back(0);
@@ -186,6 +218,7 @@ namespace str {
         return result; // local value will be moved
     }
 
+#endif
 #endif
 
 //    String to_bin(const String& value)
