@@ -1,5 +1,17 @@
 #include <ArxStringUtils.h>
+
+#if ARX_HAVE_LIBSTDCPLUSPLUS >= 201103L // Have libstdc++11
 #include <cassert>
+#else
+inline void assert_impl(const bool b, const String& expression) {
+    if (!b) {
+        Serial.print("assertion failed: ");
+        Serial.println(expression);
+        while(1) ;
+    }
+}
+#define assert(b) assert_impl((b), #b)
+#endif
 
 void setup()
 {
@@ -108,6 +120,7 @@ void setup()
     Serial.print("convert '123.456789' to string with precision 2 in width 8: ");
     Serial.println(arx::str::to_string(123.456789, 2, 8));
 
+#if ARX_HAVE_LIBSTDCPLUSPLUS >= 201103L // Have libstdc++11
     auto strs1 = arx::str::split_string("one,two,three,four", ",");
     Serial.print("string 'one,two,three' is devided to : ");
     for (auto& s : strs1) { Serial.print(s); Serial.print(", "); }
@@ -117,6 +130,7 @@ void setup()
     Serial.print("string 'one,two,three' is devided to : ");
     for (auto& s : strs2) { Serial.print(s); Serial.print(", "); }
     Serial.println();
+#endif
 }
 
 void loop()
