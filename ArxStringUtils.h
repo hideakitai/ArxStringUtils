@@ -21,8 +21,8 @@
     #define ARXSTRUTIL_STRING_ERASE(s, i, j) s.erase(i, j)
     #define ARXSTRUTIL_STRING_TO_INT(s) std::stoi(s)
 #endif
-#include "util/ArxTypeTraits/ArxTypeTraits.h"
-#include "util/ArxContainer/ArxContainer.h"
+#include <ArxTypeTraits.h>
+#include <ArxContainer.h>
 
 namespace arx {
 namespace str {
