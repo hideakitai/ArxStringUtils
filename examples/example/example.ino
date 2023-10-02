@@ -121,7 +121,7 @@ void setup() {
     Serial.println(arx::str::to_string(123.456789, 2, 8));
 
 #if ARX_HAVE_LIBSTDCPLUSPLUS >= 201103L  // Have libstdc++11
-    auto strs1 = arx::str::split_string(F("one,two,three,four", ","));
+    auto strs1 = arx::str::split_string(F("one,two,three,four"), ",");
     Serial.print(F("string 'one,two,three' is devided to : "));
     for (auto& s : strs1) {
         Serial.print(s);
@@ -129,7 +129,7 @@ void setup() {
     }
     Serial.println();
 
-    auto strs2 = arx::str::split_string(F("one,two,three,four\n", ","));
+    auto strs2 = arx::str::split_string(F("one,two,three,four\n"), ",");
     Serial.print(F("string 'one,two,three' is devided to : "));
     for (auto& s : strs2) {
         Serial.print(s);
