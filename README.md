@@ -25,11 +25,10 @@ template <typename T> inline size_t string_length(const T& value);
 std::vector<String> split_string(const String& str, const String& delim);
 ```
 
-## Embedded Libraries
+## Dependent Libraries
 
-- [ArxTypeTraits v0.2.3](https://github.com/hideakitai/ArxTypeTraits)
-- [ArxContainer v0.4.0](https://github.com/hideakitai/ArxContainer)
-
+- [ArxContainer](https://github.com/hideakitai/ArxContainer)
+- [ArxTypeTraits](https://github.com/hideakitai/ArxTypeTraits)
 
 ## Used Inside of
 
