@@ -95,5 +95,7 @@ jobs:
           sketch-paths: |
             - examples
           libraries: |
-            - name: ArxStringUtils
+            - source-path: ./
+            - name: ArxContainer
+            - name: ArxTypeTraits
           verbose: true
