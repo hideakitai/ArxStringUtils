@@ -37,8 +37,8 @@ namespace str {
     using StringVec = std::vector<StringType>;
     using StringPos = std::vector<size_t>;
 #else
-    using StringVec = arx::vector<StringType>;
-    using StringPos = arx::vector<size_t>;
+    using StringVec = arx::stdx::vector<StringType>;
+    using StringPos = arx::stdx::vector<size_t>;
 #endif
 
     namespace detail
